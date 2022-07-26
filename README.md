@@ -10,5 +10,6 @@ A reference implementation script is also provided for Cadence Innovus.
 The results look like this:
 
 | Innovus version | Floorplan | DRCs | 	Setup | Hold | Density |
+|-----------------|-----------|------|--------|------|---------|
 | 18.10 | {0.0 0.0 170.28 170.28} | FAIL (44) | PASS (0.015) | PASS (0.022) |89.98%
 
