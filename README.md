@@ -1,2 +1,19 @@
 # asap7_reference_design
-reference block design for the ASAP7nm library in Cadence Innovus 21.11
+This repository contains a reference block design for a modified version of the ASAP7nm library.
+
+
+
+The ASAP7NM library/PDK was developed by ASU and all credits go to them. Here we provide a modified version of that technology, where the technology LEF file has been modified.
+A reference design is provided as well (SHA256).
+A reference implementation script is also provided for Cadence Innovus.
+
+The results look like this:
+
+Innovus version | floorplan | DRCs | setup | hold | density
+18.10 
+{0.0 0.0 170.28 170.28}
+FAIL (44)
+PASS (0.015)
+PASS (0.022)
+89.98%
+
