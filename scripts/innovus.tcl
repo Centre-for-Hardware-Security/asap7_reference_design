@@ -4,7 +4,7 @@ set OLD_INNOVUS 1
 
 set init_design_uniquify 1
 
-set init_verilog {./netlist_1ghz.v}
+set init_verilog {./netlist.v}
 
 set init_design_netlisttype {Verilog}
 set init_design_settop {1}
@@ -13,7 +13,7 @@ set init_top_cell {sha256}
 set LEF_PATH "../lef/scaled/"
 set TLEF_PATH "../techlef/"
 
-set CELL_LEF $LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef
+set CELL_LEF "$LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_SL_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_R_4x_220121a.lef"
 set TECH_LEF $TLEF_PATH/asap7_tech_4x_201209.lef
 
 #tech lef first, cell lef later
@@ -56,11 +56,11 @@ set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
 set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 148
+set FP_TARGET 160
 set FP_MUL 5
 # important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS rails are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
-# FP_MUL controls the aspect ratio. FP_MUL = 5 gives you an almost square design
+# FP_MUL controls the aspect ratio. FP_MUL = 5 gives you a perfectly square design
 # the additional 0.1 is to account for situations where innovus snaps the fplan and the space becomes too narrow to fit the rings 
 
 set cellheight [expr 0.270 * 4 ]
@@ -70,13 +70,9 @@ set fpxdim [expr $cellhgrid * $FP_TARGET*$FP_MUL]
 set fpydim [expr $cellheight * $FP_TARGET ]
 
 floorPlan -site asap7sc7p5t -s $fpxdim $fpydim $FP_RING_SIZE $FP_RING_SIZE $FP_RING_SIZE $FP_RING_SIZE -noSnap
-banana
 # this is likely not perfect because some snapping is done by innovus. the commands below came with the reference script by ASU. 
-changeFloorplan -coreToBottom [expr $FP_RING_SIZE] 
-add_tracks -honor_pitch
-#puts "Floorplan is $fpxdim by $fpydim"
-#puts "Total area is [expr $fpxdim * $fpydim ] square um"
-#puts "[expr $fpydim / $cellheight] standard cell rows tall"
+#changeFloorplan -coreToBottom [expr $FP_RING_SIZE] 
+#add_tracks -honor_pitch
 
 # classic setting: all inputs on the left, all outputs on the right.
 setPinAssignMode -pinEditInBatch true
@@ -152,8 +148,6 @@ sroute -connect { corePin } -layerChangeRange { M1(1) M7(1) } -blockPinTarget { 
 
 editPowerVia -add_vias 1 -orthogonal_only 0
 
-bananan
-
 #m3 pitch is 0.144
 #m5 pitch is 0.216
 #1.296 is a good number, 9*M3 and 6*M5
@@ -175,6 +169,9 @@ colorizePowerMesh
 
 
 place_opt_design
+
+setTieHiLoMode -maxFanout 5
+addTieHiLo -prefix TIE -cell {TIELOx1_ASAP7_75t_SL TIEHIx1_ASAP7_75t_SL}
 ccopt_design
 routeDesign
 
