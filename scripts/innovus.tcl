@@ -86,21 +86,35 @@ legalizePin
 setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer Pad -stacked_via_bottom_layer M1 -via_using_exact_crossover_size 1 -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }
 addRing -nets {VDD VSS} -type core_rings -follow core -layer {top M7 bottom M7 left M6 right M6} -width $FP_RING_WIDTH -spacing $FP_RING_SPACE -offset $FP_RING_OFFSET -center 0 -threshold 0 -jog_distance 0 -snap_wire_center_to_grid None
 
-# now we are going to add M2 follow rails. on top of every standard cell row.
+# now we are going to add M2 follow rails. on top of every standard cell row. we need to add VSS and VDD separately because the number of rows is unknown. it is possible you need one extra stripe of VDD, but not VSS.
 addStripe  -skip_via_on_wire_shape blockring \
     -direction horizontal \
     -set_to_set_distance [expr 2*$cellheight] \
     -skip_via_on_pin Standardcell \
     -stacked_via_top_layer  M1 \
-    -spacing [expr $cellheight -0.072] \
     -layer M2 \
     -width 0.072 \
-    -nets {VDD VSS} \
+    -nets {VDD} \
     -stacked_via_bottom_layer M1 \
     -start_from bottom \
     -snap_wire_center_to_grid None \
     -start_offset -0.044 \
-    -stop_offset 1
+    -stop_offset -0.044
+
+
+addStripe  -skip_via_on_wire_shape blockring \
+    -direction horizontal \
+    -set_to_set_distance [expr 2*$cellheight] \
+    -skip_via_on_pin Standardcell \
+    -stacked_via_top_layer  M1 \
+    -layer M2 \
+    -width 0.072 \
+    -nets {VSS} \
+    -stacked_via_bottom_layer M1 \
+    -start_from bottom \
+    -snap_wire_center_to_grid None \
+    -start_offset [expr $cellheight -0.044] \
+    -stop_offset -0.044
 
 #    -start_offset -0.044 
 # this offset makes sure that the bottom row is on track. yet, it causes the top row to not have an M2 follow pin. It is not an issue.
