@@ -5,8 +5,6 @@ create_constraint_mode -name sdc -sdc_files {../sdc/sha256.sdc}
 
 create_rc_corner -name rc_typ_25 -qx_tech_file ../qrc/qrcTechFile_typ03_unscaledV02 -T 25
 
-
-
 create_delay_corner -name delay_tc -library_set {tc} -rc_corner {rc_typ_25}
 create_analysis_view -name view_tc -constraint_mode {sdc} -delay_corner {delay_tc}
 set_analysis_view -setup {view_tc} -hold {view_tc}
