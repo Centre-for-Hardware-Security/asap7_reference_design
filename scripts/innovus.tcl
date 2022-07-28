@@ -56,9 +56,9 @@ set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
 set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 160
+set FP_TARGET 170
 set FP_MUL 5
-# important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS rails are offgrid or there are no valid vias that can drop on them 
+# important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS stripes are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
 # FP_MUL controls the aspect ratio. FP_MUL = 5 gives you a perfectly square design
 # the additional 0.1 is to account for situations where innovus snaps the fplan and the space becomes too narrow to fit the rings 
@@ -86,7 +86,7 @@ legalizePin
 setAddRingMode -ring_target default -extend_over_row 0 -ignore_rows 0 -avoid_short 0 -skip_crossing_trunks none -stacked_via_top_layer Pad -stacked_via_bottom_layer M1 -via_using_exact_crossover_size 1 -orthogonal_only true -skip_via_on_pin {  standardcell } -skip_via_on_wire_shape {  noshape }
 addRing -nets {VDD VSS} -type core_rings -follow core -layer {top M7 bottom M7 left M6 right M6} -width $FP_RING_WIDTH -spacing $FP_RING_SPACE -offset $FP_RING_OFFSET -center 0 -threshold 0 -jog_distance 0 -snap_wire_center_to_grid None
 
-# now we are going to add M2 follow rails. on top of every standard cell row. we need to add VSS and VDD separately because the number of rows is unknown. it is possible you need one extra stripe of VDD, but not VSS.
+# now we are going to add M2 follow rails. on top of every standard cell row. we need to add VSS and VDD separately because the number of rows is not always odd. it is possible you need one extra stripe of VDD, but not VSS.
 addStripe  -skip_via_on_wire_shape blockring \
     -direction horizontal \
     -set_to_set_distance [expr 2*$cellheight] \
@@ -115,9 +115,6 @@ addStripe  -skip_via_on_wire_shape blockring \
     -snap_wire_center_to_grid None \
     -start_offset [expr $cellheight -0.044] \
     -stop_offset -0.044
-
-#    -start_offset -0.044 
-# this offset makes sure that the bottom row is on track. yet, it causes the top row to not have an M2 follow pin. It is not an issue.
 
 # now we are going to add vertical M3 stripes. the metal stack is very restrictive, it is not easy to use other metals because of assumptions made with respect to V2 and V1. 
 set m3pwrwidth 0.936
@@ -181,12 +178,22 @@ setOptMode -setupTargetSlack 0.020
 # this helps verify_drc realize that some metals are colored. 
 colorizePowerMesh
 
-
 place_opt_design
 
+# add tie hi lo at this point. could have been handled in genus too.
 setTieHiLoMode -maxFanout 5
 addTieHiLo -prefix TIE -cell {TIELOx1_ASAP7_75t_SL TIEHIx1_ASAP7_75t_SL}
+
+# CTS
 ccopt_design
+
+set_interactive_constraint_modes [all_constraint_modes -active]
+reset_propagated_clock [all_clocks]
+if {$OLD_INNOVUS == 0} {
+	update_io_latency -source -verbose
+}
+set_propagated_clock [all_clocks]
+
 routeDesign
 
 setAnalysisMode -analysisType onChipVariation
