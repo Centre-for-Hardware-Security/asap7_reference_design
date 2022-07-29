@@ -19,19 +19,19 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 
 | Innovus version | Floorplan     | DRCs       | DRVs | Setup | Hold | Density |
 |-----------------|---------------|------------|------|-------|------|---------|
-| 17.11 | {0.0 0.0 194.04 194.04} | FAIL (12)     | 0 (1 glitch) | PASS (+0.002) | PASS (+0.029) | 76.46% |
-| 18.10 | {0.0 0.0 172.44 172.44} | FAIL (90)     | 0            | FAIL (-0.058) | PASS (+0.023) | 93.60% |
-| 18.10 | {0.0 0.0 183.24 183.24} | FAIL (16)     | 0            | FAIL (-0.002) | PASS (+0.024) | 85.72% |
-| 18.10 | {0.0 0.0 194.04 194.04} | FAIL (3)      | 0            | PASS (+0.012) | PASS (+0.024) | 76.46% |
-| 19.11 | {0.0 0.0 194.04 194.04} | PASS (0/32\*) | 0            | PASS (+0.015) | PASS (+0.021) | 75.86% | 
-| 20.11 | {0.0 0.0 194.04 194.04} | FAIL (6/26\*) | 0            | PASS (+0.016) | PASS (+0.018) | 77.01% | 
-| 21.11 | {0.0 0.0 194.04 194.04} | FAIL (5)      | 0            | PASS (+0.005) | PASS (+0.021) | 83.68% | 
+| 17.11 | {194.04 194.04} | FAIL (12)     | 0 (1 glitch) | PASS (+0.002) | PASS (+0.029) | 76.46% |
+| 18.10 | {172.44 172.44} | FAIL (90)     | 0            | FAIL (-0.058) | PASS (+0.023) | 93.60% |
+| 18.10 | {183.24 183.24} | FAIL (16)     | 0            | FAIL (-0.002) | PASS (+0.024) | 85.72% |
+| 18.10 | {194.04 194.04} | FAIL (3)      | 0            | PASS (+0.012) | PASS (+0.024) | 76.46% |
+| 19.11 | {194.04 194.04} | PASS (0/32\*) | 0            | PASS (+0.015) | PASS (+0.021) | 75.86% | 
+| 20.11 | {194.04 194.04} | FAIL (6/26\*) | 0            | PASS (+0.016) | PASS (+0.018) | 77.01% | 
+| 21.11 | {194.04 194.04} | FAIL (5)      | 0            | PASS (+0.005) | PASS (+0.021) | 83.68% | 
 
 \* False positive color violations on power grid
 
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort.
 
 
->FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
->FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
->FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
+> - FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
+> - FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
+> - FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
