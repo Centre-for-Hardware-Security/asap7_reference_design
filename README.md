@@ -25,13 +25,15 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 | 18.10 | {0.0 0.0 194.04 194.04} | FAIL (3)      | 0            | PASS (+0.012) | PASS (+0.024) | 76.46% |
 | 19.11 | {0.0 0.0 194.04 194.04} | PASS (0/32\*) | 0            | PASS (+0.015) | PASS (+0.021) | 75.86% | 
 | 20.11 | {0.0 0.0 194.04 194.04} | FAIL (6/26\*) | 0            | PASS (+0.016) | PASS (+0.018) | 77.01% | 
-| 21.11 | {0.0 0.0 194.04 194.04} | FAIL (6)   |              |FAIL (-0.015) | PASS (+0.022) | 90.10% | 
+| 21.11 | {0.0 0.0 194.04 194.04} | FAIL (5)      | 0            | PASS (+0.005) | PASS (+0.021) | 83.68% | 
 
 \* False positive color violations on power grid
 
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with some manual effort.
 
 
-FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows
-FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows
-FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows
+FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
+
+FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
+
+FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
