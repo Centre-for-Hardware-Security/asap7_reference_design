@@ -1,5 +1,5 @@
 
-set OLD_INNOVUS 1
+set VERSION 21
 # this setting is needed for Innovus versions prior to 2019.
 
 set init_design_uniquify 1
@@ -34,10 +34,15 @@ init_design
 
 # settings begin here
 # defines tech node
-setDesignMode -process 7
+if {$VERSION <= 19} {
+	setDesignMode -process 7 
+} else {
+	setDesignMode -process 7 -node N7
+}
+
 setMultiCpuUsage -localCpu 8
 
-if {$OLD_INNOVUS == 1} {
+if {$VERSION <= 19} {
 	setNanoRouteMode -routeBottomRoutingLayer 2
 	setNanoRouteMode -routeTopRoutingLayer 7
 } else {
@@ -69,10 +74,25 @@ set cellhgrid  0.216
 set fpxdim [expr $cellhgrid * $FP_TARGET*$FP_MUL]
 set fpydim [expr $cellheight * $FP_TARGET ]
 
+# this command prints the snapping rules, it is useful for debugging
+fpiGetSnapRule
+
 floorPlan -site asap7sc7p5t -s $fpxdim $fpydim $FP_RING_SIZE $FP_RING_SIZE $FP_RING_SIZE $FP_RING_SIZE -noSnap
 # this is likely not perfect because some snapping is done by innovus. the commands below came with the reference script by ASU. 
 #changeFloorplan -coreToBottom [expr $FP_RING_SIZE] 
 #add_tracks -honor_pitch
+
+addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
+
+if {$VERSION >= 21} {
+	# this series of commands makes innovus 21 happy :)
+	add_tracks
+	add_tracks -honor_pitch
+	add_tracks -snap_m1_track_to_cell_pins
+	add_tracks -snap_m1_track_to_cell_pins -mode replace
+	deleteAllFPObjects
+	addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
+}
 
 # classic setting: all inputs on the left, all outputs on the right.
 setPinAssignMode -pinEditInBatch true
@@ -189,7 +209,7 @@ ccopt_design
 
 set_interactive_constraint_modes [all_constraint_modes -active]
 reset_propagated_clock [all_clocks]
-if {$OLD_INNOVUS == 0} {
+if {$VERSION <= 19} {
 	update_io_latency -source -verbose
 }
 set_propagated_clock [all_clocks]
