@@ -1,4 +1,4 @@
-# asap7_reference_design
+# Reference Design for a modified version of ASAP7nm 
 This repository contains a reference block design for a modified version of the ASAP7nm library. The ASAP7nm library/PDK was developed by ASU and all credits go to them. 
 
 Here we provide a modified version of their 7nm technology. The differences are many:
@@ -7,7 +7,7 @@ Here we provide a modified version of their 7nm technology. The differences are 
 
 
 A reference design is provided as well (SHA256). The design is synthesized in Genus at 1.66GHz and it is possible to close timing on Innovus also at 1.66GHz.
-A reference implementation script is also provided for Cadence Innovus. The script is /complete/, in the sente that it provides:
+A reference implementation script is also provided for Cadence Innovus. The script is *complete*, in the sente that it provides:
 * power ring in M6-M7
 * follow pin routing in stapled style (M2-VIA-M1)
 * vertical stripes in M3
@@ -29,11 +29,9 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 
 \* False positive color violations on power grid
 
-The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with some manual effort.
+The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort.
 
 
-FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
-
-FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
-
-FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
+>FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
+>FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
+>FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
