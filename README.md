@@ -17,16 +17,21 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 * traditional Place->CTS->Route flow
 
 
-| Innovus version | Floorplan     | DRCs       | DRVs | Setup | Hold | Density |
-|-----------------|---------------|------------|------|-------|------|---------|
-| 17.11 | {194.04 194.04} | FAIL (12)     | 0 (1 glitch) | PASS (+0.002) | PASS (+0.029) | 76.46% |
-| 18.10 | {172.44 172.44} | FAIL (90)     | 0            | FAIL (-0.058) | PASS (+0.023) | 93.60% |
-| 18.10 | {183.24 183.24} | FAIL (16)     | 0            | FAIL (-0.002) | PASS (+0.024) | 85.72% |
-| 18.10 | {194.04 194.04} | FAIL (3)      | 0            | PASS (+0.012) | PASS (+0.024) | 76.46% |
-| 19.11 | {194.04 194.04} | PASS (0/32\*) | 0            | PASS (+0.015) | PASS (+0.021) | 75.86% | 
-| 20.11 | {194.04 194.04} | FAIL (6/26\*) | 0            | PASS (+0.016) | PASS (+0.018) | 77.01% | 
-| 21.11 | {194.04 194.04} | FAIL (5)      | 0            | PASS (+0.005) | PASS (+0.021) | 83.68% | 
+| Innovus version | Floorplan     | DRCs          | Setup         | Hold          | Density |
+|-----------------|---------------|---------------|---------------|---------------|---------|
+| 17.11 |         {194.04 194.04} | FAIL (12)     | PASS (+0.002) | PASS (+0.029) | 76.88%  |
+| 18.10 | 	  {194.04 194.04} | FAIL (3)      | PASS (+0.012) | PASS (+0.024) | 76.46%  |
+| 19.11 |	  {194.04 194.04} | PASS (0/24\*) | PASS (+0.015) | PASS (+0.021) | 75.86%  | 
+| 20.11 |	  {194.04 194.04} | FAIL (6)      | PASS (+0.016) | PASS (+0.018) | 77.01%  | 
+| 21.11 | 	  {194.04 194.04} | FAIL (9)      | PASS (+0.002) | PASS (+0.023) | 77.25%  | 
+|-----------------|---------------|---------------|---------------|---------------|---------|
+| 21.11 | 	  {183.24 183.24} | FAIL (15)     | PASS (+0.004) | PASS (+0.023) | 85.15%  |
+| 21.11 | 	  {172.44 172.44} | FAIL (33)     | FAIL (-0.066) | PASS (+0.021) | 94.40%  |
+|-------------------------------------------------------------------------------------------|
 
+
+
+\* Glitch
 \* False positive color violations on power grid
 
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort.

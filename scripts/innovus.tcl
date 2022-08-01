@@ -1,6 +1,10 @@
 
+# the script is slightly different for different versions of innovus. please set this variable wit the version number
+#set VERSION 17
+#set VERSION 18
+#set VERSION 19
+#set VERSION 20
 set VERSION 21
-# this setting is needed for Innovus versions prior to 2019.
 
 set init_design_uniquify 1
 
@@ -61,7 +65,7 @@ set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
 set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 170
+set FP_TARGET 150
 set FP_MUL 5
 # important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS stripes are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
@@ -187,7 +191,7 @@ editPowerVia -add_vias 1 -orthogonal_only 0
 verify_drc
 
 # the interval setting matches the M3 stripes for saving some resources. 
-addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
+#addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
 #win
 
 setOptMode -holdTargetSlack  0.020
@@ -209,7 +213,7 @@ ccopt_design
 
 set_interactive_constraint_modes [all_constraint_modes -active]
 reset_propagated_clock [all_clocks]
-if {$VERSION <= 19} {
+if {$VERSION == 20} {
 	update_io_latency -source -verbose
 }
 set_propagated_clock [all_clocks]
@@ -219,9 +223,21 @@ routeDesign
 setAnalysisMode -analysisType onChipVariation
 setSIMode -enable_glitch_report true
 setSIMode -enable_glitch_propagation true
+setSIMode -enable_delay_report true
 optDesign -postRoute
 optDesign -postRoute -hold
 
-report_noise > noise.txt
+report_noise -threshold 0.2 
+report_noise -bumpy_waveform 
+
+
+# final notes
+# there is a lot more that this script could do to become more industry-like. 
+# - The SDC should be more realistic. The in/out constraints are picked almost arbitrarily.
+# - It should handle path groups. 
+# - It could have better setup/hold targets
+# - It should handle DFT/scan. 
+# - It should have more OPT runs to help with convergence at the end. 
+# - It should do signoff-quality checks at the end, but this requires external quantus and licenses. Some users might not have it, so the commands are not provided
 
 
