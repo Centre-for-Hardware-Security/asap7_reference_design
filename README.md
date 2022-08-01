@@ -27,11 +27,8 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 |-|-|-|-|-|-|
 | 21.11 | 	  {183.24 183.24} | FAIL (15)     | PASS (+0.004) | PASS (+0.023) | 85.15%  |
 | 21.11 | 	  {172.44 172.44} | FAIL (33)     | FAIL (-0.066) | PASS (+0.021) | 94.40%  |
-|-------------------------------------------------------------------------------------------|
 
 
-
-\* Glitch
 \* False positive color violations on power grid
 
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort.
