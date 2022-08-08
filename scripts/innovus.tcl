@@ -1,10 +1,10 @@
 
 # the script is slightly different for different versions of innovus. please set this variable wit the version number
 #set VERSION 17
-#set VERSION 18
+set VERSION 18
 #set VERSION 19
 #set VERSION 20
-set VERSION 21
+#set VERSION 21
 
 set init_design_uniquify 1
 
@@ -231,13 +231,29 @@ report_noise -threshold 0.2
 report_noise -bumpy_waveform 
 
 
+setStreamOutMode -reset
+
+streamOut ./sha256_v${VERSION}.gds.gz \
+    -mapFile {../gds/gds2.map} \
+    -libName DesignLib \
+    -uniquifyCellNames \
+    -outputMacros \
+    -stripes 1 \
+    -mode ALL \
+    -units 4000 \
+    -reportFile ../report/top/gds_stream_out_final.rpt \
+    -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_R_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SRAM_220121a_scaled4x.gds}
+
+
+
+
 # final notes
 # there is a lot more that this script could do to become more industry-like. 
 # - The SDC should be more realistic. The in/out constraints are picked almost arbitrarily.
 # - It should handle path groups. 
 # - It could have better setup/hold targets
 # - It should handle DFT/scan. 
-# - It should have more OPT runs to help with convergence at the end. 
+# - It should/could have more OPT runs to help with convergence at the end. 
 # - It should do signoff-quality checks at the end, but this requires external quantus and licenses. Some users might not have it, so the commands are not provided
 
 
