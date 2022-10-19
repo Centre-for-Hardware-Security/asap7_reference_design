@@ -1,19 +1,20 @@
 
 # the script is slightly different for different versions of innovus. please set this variable wit the version number
 #set VERSION 17
-set VERSION 18
+#set VERSION 18
 #set VERSION 19
-#set VERSION 20
+set VERSION 20
 #set VERSION 21
 
 set init_design_uniquify 1
 
-set init_verilog {./netlist.v}
+set init_verilog {../run/netlist.v}
 
 set init_design_netlisttype {Verilog}
 set init_design_settop {1}
 set init_top_cell {sha256}
 
+set DB_PATH "../db/"					
 set LEF_PATH "../lef/scaled/"
 set TLEF_PATH "../techlef/"
 
@@ -46,7 +47,7 @@ if {$VERSION <= 19} {
 
 setMultiCpuUsage -localCpu 8
 
-if {$VERSION <= 19} {
+if {$VERSION <= 20} {
 	setNanoRouteMode -routeBottomRoutingLayer 2
 	setNanoRouteMode -routeTopRoutingLayer 7
 } else {
@@ -230,19 +231,22 @@ optDesign -postRoute -hold
 report_noise -threshold 0.2 
 report_noise -bumpy_waveform 
 
+# Writing out the def file and the netlist
+defOut -netlist -routing -allLayers ${DB_PATH}${init_top_cell}_v${VERSION}.def
+saveNetlist ${DB_PATH}${init_top_cell}_v${VERSION}.v													
 
-setStreamOutMode -reset
+# setStreamOutMode -reset
 
-streamOut ./sha256_v${VERSION}.gds.gz \
-    -mapFile {../gds/gds2.map} \
-    -libName DesignLib \
-    -uniquifyCellNames \
-    -outputMacros \
-    -stripes 1 \
-    -mode ALL \
-    -units 4000 \
-    -reportFile ../report/top/gds_stream_out_final.rpt \
-    -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_R_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SRAM_220121a_scaled4x.gds}
+# streamOut ./sha256_v${VERSION}.gds.gz \
+    # -mapFile {../gds/gds2.map} \
+    # -libName DesignLib \
+    # -uniquifyCellNames \
+    # -outputMacros \
+    # -stripes 1 \
+    # -mode ALL \
+    # -units 4000 \
+    # -reportFile ../report/top/gds_stream_out_final.rpt \
+    # -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_R_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SRAM_220121a_scaled4x.gds}
 
 
 
@@ -255,5 +259,3 @@ streamOut ./sha256_v${VERSION}.gds.gz \
 # - It should handle DFT/scan. 
 # - It should/could have more OPT runs to help with convergence at the end. 
 # - It should do signoff-quality checks at the end, but this requires external quantus and licenses. Some users might not have it, so the commands are not provided
-
-
