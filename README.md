@@ -31,7 +31,8 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 
 \* False positive color violations on power grid
 
-The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort.
+The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort. 
+This repository also includes two Innovus databases of the same SHA design implemented in version 19.11 and 20.11. Both databases are DRC clean. Check the folder /db/
 
 
 > - FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
