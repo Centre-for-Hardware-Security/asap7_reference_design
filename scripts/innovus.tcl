@@ -159,6 +159,10 @@ addStripe  -skip_via_on_wire_shape Noshape \
     -stacked_via_bottom_layer M2 \
     -start_from left
 
+if {$VERSION == 17} {
+	editPowerVia -delete_vias 1 -top_layer 4 -bottom_layer 3
+	editPowerVia -add_vias 1
+}
 
 # now we are going to add horizontal M4 stripes. the metal stack is very restrictive, it is not easy to use other metals because of assumptions made with respect to V2 and V1. 
 set m4pwrwidth 0.864
