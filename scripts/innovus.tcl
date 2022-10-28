@@ -2,8 +2,8 @@
 # the script is slightly different for different versions of innovus. please set this variable wit the version number
 #set VERSION 17
 #set VERSION 18
-#set VERSION 19
-set VERSION 20
+set VERSION 19
+#set VERSION 20
 #set VERSION 21
 
 set init_design_uniquify 1
@@ -66,7 +66,7 @@ set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
 set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 150
+set FP_TARGET 171
 set FP_MUL 5
 # important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS stripes are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
@@ -206,6 +206,13 @@ setOptMode -setupTargetSlack 0.020
 
 # this helps verify_drc realize that some metals are colored. 
 colorizePowerMesh
+
+# for v19, Innovus does a silly mistake when assigning colors to vias on the power rings. these lines fix it.
+if {$VERSION == 19} {
+	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
+	editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6
+	editPowerVia -add_vias 1
+}
 
 place_opt_design
 
