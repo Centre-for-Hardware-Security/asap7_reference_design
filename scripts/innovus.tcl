@@ -2,8 +2,8 @@
 # the script is slightly different for different versions of innovus. please set this variable wit the version number
 #set VERSION 17
 #set VERSION 18
-set VERSION 19
-#set VERSION 20
+#set VERSION 19
+set VERSION 20
 #set VERSION 21
 
 set init_design_uniquify 1
@@ -66,7 +66,7 @@ set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
 set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 171
+set FP_TARGET 170
 set FP_MUL 5
 # important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS stripes are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
@@ -87,14 +87,13 @@ floorPlan -site asap7sc7p5t -s $fpxdim $fpydim $FP_RING_SIZE $FP_RING_SIZE $FP_R
 #changeFloorplan -coreToBottom [expr $FP_RING_SIZE] 
 #add_tracks -honor_pitch
 
+# the interval setting matches the M3 stripes for saving some resources. 
 addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
 
 if {$VERSION >= 21} {
 	# this series of commands makes innovus 21 happy :)
-	add_tracks
-	add_tracks -honor_pitch
 	add_tracks -snap_m1_track_to_cell_pins
-	add_tracks -snap_m1_track_to_cell_pins -mode replace
+	add_tracks -mode replace -offsets {M5 vertical 0}
 	deleteAllFPObjects
 	addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
 }
@@ -126,7 +125,6 @@ addStripe  -skip_via_on_wire_shape blockring \
     -start_offset -0.044 \
     -stop_offset -0.044
 
-
 addStripe  -skip_via_on_wire_shape blockring \
     -direction horizontal \
     -set_to_set_distance [expr 2*$cellheight] \
@@ -147,6 +145,8 @@ set m3pwrspacing 0.360
 set m3pwrset2setdist    12.960
 
 # looks like this   |0.936|0.360|0.936|long space... repeat pattern 
+# if the last vertical M3 stripe is too close to the edge of the core, it can create a DRC violation. this stripe can be deleted manually.
+
 addStripe  -skip_via_on_wire_shape Noshape \
     -set_to_set_distance $m3pwrset2setdist \
     -skip_via_on_pin Standardcell \
@@ -159,6 +159,8 @@ addStripe  -skip_via_on_wire_shape Noshape \
     -stacked_via_bottom_layer M2 \
     -start_from left
 
+# innovus 17 does some unusual large via selection for the power grid and generates violations
+# the commands below fix that
 if {$VERSION == 17} {
 	editPowerVia -delete_vias 1 -top_layer 4 -bottom_layer 3
 	editPowerVia -add_vias 1
@@ -167,7 +169,7 @@ if {$VERSION == 17} {
 # now we are going to add horizontal M4 stripes. the metal stack is very restrictive, it is not easy to use other metals because of assumptions made with respect to V2 and V1. 
 set m4pwrwidth 0.864
 set m4pwrspacing 0.864
-set m4pwrset2setdist    21.6
+set m4pwrset2setdist 21.6
 
 # looks like this   |0.864|0.864|0.864|long space... repeat pattern 
 addStripe  -skip_via_on_wire_shape Noshape \
@@ -188,16 +190,7 @@ sroute -connect { corePin } -layerChangeRange { M1(1) M7(1) } -blockPinTarget { 
 
 editPowerVia -add_vias 1 -orthogonal_only 0
 
-#m3 pitch is 0.144
-#m5 pitch is 0.216
-#1.296 is a good number, 9*M3 and 6*M5
-#m3 valid widths are 0.072 0.36 0.648 0.936 1.224 1.512
-
 verify_drc
-
-# the interval setting matches the M3 stripes for saving some resources. 
-#addWellTap -cell TAPCELL_ASAP7_75t_L -cellInterval 12.960 -inRowOffset 1.296
-#win
 
 setOptMode -holdTargetSlack  0.020
 setOptMode -setupTargetSlack 0.020
@@ -207,8 +200,22 @@ setOptMode -setupTargetSlack 0.020
 # this helps verify_drc realize that some metals are colored. 
 colorizePowerMesh
 
-# for v19, Innovus does a silly mistake when assigning colors to vias on the power rings. these lines fix it.
+# for some versions of innovus, silly mistakes are made when assigning colors to vias on the power rings. these lines fix it.
 if {$VERSION == 19} {
+	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
+	editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6
+	editPowerVia -add_vias 1
+}
+
+# for v20, these commands might have to be executed later as well once the layout is finalized
+if {$VERSION == 20} {
+	#colorizePowerMesh -reverse_with_nondefault_width 1
+	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
+	editPowerVia -add_vias 1
+}
+
+if {$VERSION == 21} {
+	colorizePowerMesh -reverse_with_nondefault_width 1
 	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
 	editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6
 	editPowerVia -add_vias 1
@@ -225,10 +232,13 @@ ccopt_design
 
 set_interactive_constraint_modes [all_constraint_modes -active]
 reset_propagated_clock [all_clocks]
-if {$VERSION == 20} {
-	update_io_latency -source -verbose
+if {$VERSION == 21} {
+	set_propagated_clock [all_clocks]
+	#update_io_latency -source -verbose
+} else {
+	set_propagated_clock [all_clocks]
 }
-set_propagated_clock [all_clocks]
+
 
 routeDesign
 
