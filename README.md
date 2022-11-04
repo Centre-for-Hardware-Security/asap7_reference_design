@@ -28,7 +28,7 @@ The reference script has been evaluated on several versions of Innovus and the r
 | 21.11 | 	  {194.04 194.04} | FAIL (6)      | PASS (+0.019) | PASS (+0.019) | 70.32%  | 
 |-|-|-|-|-|-|
 | 21.11 | 	  {183.24 183.24} | FAIL (8)     | PASS (+0.020) | PASS (+0.019) | 78.91%  |
-| 21.11 | 	  {172.44 172.44} | FAIL (33)     | FAIL (-0.066) | PASS (+0.021) | 94.40%  |
+| 21.11 | 	  {172.44 172.44} | FAIL (31)     | PASS (+0.019) | PASS (+0.019) | 89.07%  |
 
 
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort. 
