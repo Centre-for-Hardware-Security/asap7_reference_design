@@ -19,7 +19,7 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 
 | Innovus version | Floorplan     | DRCs          | Setup         | Hold          | Density |
 |-----------------|---------------|---------------|---------------|---------------|---------|
-| 17.11 |         {194.04 194.04} | FAIL (12)     | PASS (+0.002) | PASS (+0.029) | 76.88%  |
+| 17.11 |         {194.04 194.04} | FAIL (7)     | PASS (+0.020) | PASS (+0.022) | 70.38%  |
 | 18.10 | 	  {194.04 194.04} | FAIL (3)      | PASS (+0.012) | PASS (+0.024) | 76.46%  |
 | 19.11 |	  {194.04 194.04} | PASS (0/24\*) | PASS (+0.015) | PASS (+0.021) | 75.86%  | 
 | 20.11 |	  {194.04 194.04} | FAIL (6)      | PASS (+0.016) | PASS (+0.018) | 77.01%  | 
