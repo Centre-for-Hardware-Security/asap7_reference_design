@@ -16,11 +16,13 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 * placement of tap cells
 * traditional Place->CTS->Route flow
 
+The reference script has been evaluated on several versions of Innovus and the results are as follows:
+
 
 | Innovus version | Floorplan     | DRCs          | Setup         | Hold          | Density |
 |-----------------|---------------|---------------|---------------|---------------|---------|
 | 17.11 |         {194.04 194.04} | FAIL (7)     | PASS (+0.020) | PASS (+0.022) | 70.38%  |
-| 18.10 | 	  {194.04 194.04} | FAIL (3)      | PASS (+0.012) | PASS (+0.024) | 76.46%  |
+| 18.10 | 	  {194.04 194.04} | FAIL (4)      | PASS (+0.023) | PASS (+0.023) | 70.27%  |
 | 19.11 |	  {194.04 194.04} | PASS (0/24\*) | PASS (+0.015) | PASS (+0.021) | 75.86%  | 
 | 20.11 |	  {194.04 194.04} | FAIL (6)      | PASS (+0.016) | PASS (+0.018) | 77.01%  | 
 | 21.11 | 	  {194.04 194.04} | FAIL (9)      | PASS (+0.002) | PASS (+0.023) | 77.25%  | 
@@ -34,7 +36,7 @@ A reference implementation script is also provided for Cadence Innovus. The scri
 The designs above often fail to route due to pin access issues. All DRCs have the same "pattern" and can be fixed with *some* manual effort. 
 This repository also includes two Innovus databases of the same SHA design implemented in version 19.11 and 20.11. Both databases are DRC clean. Check the folder /db/
 
-
+For reference, floorplan box sizes are:
 > - FP box of {0.0 0.0 172.44 172.44} means 150 std cell rows.
 > - FP box of {0.0 0.0 183.24 183.24} means 160 std cell rows.
 > - FP box of {0.0 0.0 194.04 194.04} means 170 std cell rows.
