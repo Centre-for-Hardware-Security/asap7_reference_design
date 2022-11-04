@@ -27,7 +27,7 @@ The reference script has been evaluated on several versions of Innovus and the r
 | 20.11 |	  {194.04 194.04} | FAIL (6)      | PASS (+0.025) | PASS (+0.020) | 70.26%  | 
 | 21.11 | 	  {194.04 194.04} | FAIL (6)      | PASS (+0.019) | PASS (+0.019) | 70.32%  | 
 |-|-|-|-|-|-|
-| 21.11 | 	  {183.24 183.24} | FAIL (15)     | PASS (+0.004) | PASS (+0.023) | 85.15%  |
+| 21.11 | 	  {183.24 183.24} | FAIL (8)     | PASS (+0.020) | PASS (+0.019) | 78.91%  |
 | 21.11 | 	  {172.44 172.44} | FAIL (33)     | FAIL (-0.066) | PASS (+0.021) | 94.40%  |
 
 
