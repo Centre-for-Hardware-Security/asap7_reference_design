@@ -7,7 +7,7 @@ Here we provide a modified version of their 7nm technology. The differences are 
 
 
 A reference design is provided as well (SHA256). The design is synthesized in Genus at 1.66GHz and it is possible to close timing on Innovus also at 1.66GHz.
-A reference implementation script is also provided for Cadence Innovus. The script is *complete*, in the sente that it provides:
+A reference implementation script is also provided for Cadence Innovus. The script is *complete*, in the sense that it provides:
 * power ring in M6-M7
 * follow pin routing in stapled style (M2-VIA-M1)
 * vertical stripes in M3
