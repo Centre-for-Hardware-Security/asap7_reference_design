@@ -3,8 +3,8 @@
 #set VERSION 17
 #set VERSION 18
 #set VERSION 19
-set VERSION 20
-#set VERSION 21
+#set VERSION 20
+set VERSION 21
 
 set init_design_uniquify 1
 
@@ -18,7 +18,7 @@ set DB_PATH "../db/"
 set LEF_PATH "../lef/scaled/"
 set TLEF_PATH "../techlef/"
 
-set CELL_LEF "$LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_SL_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_R_4x_220121a.lef"
+set CELL_LEF "$LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_SL_4x_220121a.lef"
 set TECH_LEF $TLEF_PATH/asap7_tech_4x_201209.lef
 
 #tech lef first, cell lef later
@@ -267,7 +267,8 @@ saveNetlist ${DB_PATH}${init_top_cell}_v${VERSION}.v
     # -mode ALL \
     # -units 4000 \
     # -reportFile ../report/top/gds_stream_out_final.rpt \
-    # -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_R_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SRAM_220121a_scaled4x.gds}
+    # -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds }
+    ## -merge { ../gds/asap7sc7p5t_28_L_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_R_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SL_220121a_scaled4x.gds  ../gds/asap7sc7p5t_28_SRAM_220121a_scaled4x.gds}
 
 
 
