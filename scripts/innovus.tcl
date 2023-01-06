@@ -18,7 +18,7 @@ set DB_PATH "../db/"
 set LEF_PATH "../lef/scaled/"
 set TLEF_PATH "../techlef/"
 
-set CELL_LEF "$LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_SL_4x_220121a.lef"
+set CELL_LEF "$LEF_PATH/asap7sc7p5t_28_L_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_SL_4x_220121a.lef $LEF_PATH/asap7sc7p5t_28_R_4x_220121a.lef"
 set TECH_LEF $TLEF_PATH/asap7_tech_4x_201209.lef
 
 #tech lef first, cell lef later
@@ -64,9 +64,9 @@ globalNetConnect VSS -type pgpin -pin VSS -inst *
 set FP_RING_OFFSET 0.384
 set FP_RING_WIDTH 2.176
 set FP_RING_SPACE 0.384
-set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 0.1}]
+set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET + 1.1}]
 #set FP_RING_SIZE [expr {$FP_RING_SPACE + 2*$FP_RING_WIDTH + $FP_RING_OFFSET}]
-set FP_TARGET 170
+set FP_TARGET 165
 set FP_MUL 5
 # important: these numbers cannot be chosen arbitrarily, otherwise all VDD/VSS stripes are offgrid or there are no valid vias that can drop on them 
 # FP_TARGET is the only variable you can freely modify. this one determines the number of standard cell rows in your design
@@ -200,26 +200,6 @@ setOptMode -setupTargetSlack 0.020
 # this helps verify_drc realize that some metals are colored. 
 colorizePowerMesh
 
-# for some versions of innovus, silly mistakes are made when assigning colors to vias on the power rings. these lines fix it.
-if {$VERSION == 19} {
-	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
-	editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6
-	editPowerVia -add_vias 1
-}
-
-# for v20, these commands might have to be executed later as well once the layout is finalized
-if {$VERSION == 20} {
-	#colorizePowerMesh -reverse_with_nondefault_width 1
-	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
-	editPowerVia -add_vias 1
-}
-
-if {$VERSION == 21} {
-	colorizePowerMesh -reverse_with_nondefault_width 1
-	editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
-	editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6
-	editPowerVia -add_vias 1
-}
 
 place_opt_design
 
@@ -239,9 +219,18 @@ if {$VERSION == 21} {
 	set_propagated_clock [all_clocks]
 }
 
+legalizePin  
 
 routeDesign
 
+# for some versions of innovus, silly mistakes are made when assigning colors to vias on the power rings. these lines fix it.
+editPowerVia -delete_vias 1 -top_layer 7 -bottom_layer 6	
+editPowerVia -delete_vias 1 -top_layer 6 -bottom_layer 5
+editPowerVia -delete_vias 1 -top_layer 5 -bottom_layer 4
+editPowerVia -delete_vias 1 -top_layer 4 -bottom_layer 3
+editPowerVia -delete_vias 1 -top_layer 3 -bottom_layer 2
+editPowerVia -delete_vias 1 -top_layer 2 -bottom_layer 1
+editPowerVia -add_vias 1
 setAnalysisMode -analysisType onChipVariation
 setSIMode -enable_glitch_report true
 setSIMode -enable_glitch_propagation true
@@ -253,6 +242,8 @@ report_noise -threshold 0.2
 report_noise -bumpy_waveform 
 
 # Writing out the def file and the netlist
+set defOutLefVia 1
+set defOutLefNDR 1
 defOut -netlist -routing -allLayers ${DB_PATH}${init_top_cell}_v${VERSION}.def
 saveNetlist ${DB_PATH}${init_top_cell}_v${VERSION}.v													
 
